@@ -66,7 +66,8 @@ def _run_repl(top_k: int) -> None:
 
     while True:
         try:
-            query = console.input("\n[bold magenta]>[/bold magenta] ").strip()
+            console.print("\n[bold magenta]>[/bold magenta] ", end="")
+            query = input().strip()
         except (KeyboardInterrupt, EOFError):
             break
 
