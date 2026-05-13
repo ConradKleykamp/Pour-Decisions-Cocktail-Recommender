@@ -1,4 +1,12 @@
+import sys
 from typing import Optional
+
+# Capturing terminal settings before ML library imports alter them
+try:
+    import termios as _termios
+    _SAVED_TERM = _termios.tcgetattr(sys.stdin.fileno()) if sys.stdin.isatty() else None
+except Exception:
+    _SAVED_TERM = None
 
 import typer
 from rich.console import Console
@@ -9,6 +17,15 @@ from recommender.search import search
 
 app = typer.Typer(add_completion=False)
 console = Console()
+
+
+def _restore_terminal() -> None:
+    # Restoring terminal to its original cooked mode so Enter is processed correctly
+    if _SAVED_TERM is not None:
+        try:
+            _termios.tcsetattr(sys.stdin.fileno(), _termios.TCSADRAIN, _SAVED_TERM)
+        except Exception:
+            pass
 
 
 def _render_result(result: dict, rank: int) -> Panel:
@@ -66,6 +83,7 @@ def _run_repl(top_k: int) -> None:
 
     while True:
         try:
+            _restore_terminal()
             console.print("\n[bold magenta]>[/bold magenta] ", end="")
             query = input().strip()
         except (KeyboardInterrupt, EOFError):
