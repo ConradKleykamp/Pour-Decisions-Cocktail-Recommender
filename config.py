@@ -13,7 +13,7 @@ EMBEDDINGS_PATH = EMBEDDINGS_INDEX_DIR / "embeddings.npy"
 METADATA_PATH = EMBEDDINGS_INDEX_DIR / "metadata.pkl"
 
 # Specifying the sentence-transformers model to use for embedding
-EMBEDDING_MODEL = "all-MiniLM-L6-v2"
+EMBEDDING_MODEL = "multi-qa-MiniLM-L6-cos-v1"
 
 # Setting the TheCocktailDB API base URL
 API_BASE_URL = "https://www.thecocktaildb.com/api/json/v1/1"

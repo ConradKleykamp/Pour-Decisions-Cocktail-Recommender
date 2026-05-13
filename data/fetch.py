@@ -19,7 +19,6 @@ INGREDIENT_COLS = [f"strIngredient{i}" for i in range(1, 16)]
 
 # Mapping raw API field names to clean output field names
 FIELD_MAP = {
-    "idDrink": "id",
     "strDrink": "name",
     "strCategory": "category",
     "strGlass": "glass",
@@ -42,7 +41,6 @@ def _normalize_ingredients(row: pd.Series) -> list[str]:
 def _fetch_all_cocktails() -> list[dict]:
     # Fetching cocktails from TheCocktailDB by iterating over every letter a-z
     records: list[dict] = []
-    letters = list(string.ascii_lowercase)
 
     with Progress(
         TextColumn("[bold cyan]  {task.description}"),
@@ -50,9 +48,9 @@ def _fetch_all_cocktails() -> list[dict]:
         TaskProgressColumn(),
         console=console,
     ) as progress:
-        task = progress.add_task("Fetching cocktails", total=len(letters))
+        task = progress.add_task("Fetching cocktails", total=len(string.ascii_lowercase))
 
-        for letter in letters:
+        for letter in string.ascii_lowercase:
             response = requests.get(
                 f"{API_BASE_URL}/search.php",
                 params={"f": letter},

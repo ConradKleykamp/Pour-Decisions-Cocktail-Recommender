@@ -1,12 +1,6 @@
 import sys
+import termios
 from typing import Optional
-
-# Capturing terminal settings before ML library imports alter them
-try:
-    import termios as _termios
-    _SAVED_TERM = _termios.tcgetattr(sys.stdin.fileno()) if sys.stdin.isatty() else None
-except Exception:
-    _SAVED_TERM = None
 
 import typer
 from rich.console import Console
@@ -20,12 +14,17 @@ console = Console()
 
 
 def _restore_terminal() -> None:
-    # Restoring terminal to its original cooked mode so Enter is processed correctly
-    if _SAVED_TERM is not None:
-        try:
-            _termios.tcsetattr(sys.stdin.fileno(), _termios.TCSADRAIN, _SAVED_TERM)
-        except Exception:
-            pass
+    # Explicitly enabling canonical mode and CR-to-NL translation so Enter is handled correctly
+    try:
+        if not sys.stdin.isatty():
+            return
+        fd = sys.stdin.fileno()
+        attrs = termios.tcgetattr(fd)
+        attrs[0] |= termios.ICRNL           # translate \r → \n on input
+        attrs[3] |= termios.ICANON | termios.ECHO  # line-buffered canonical mode
+        termios.tcsetattr(fd, termios.TCSADRAIN, attrs)
+    except Exception:
+        pass
 
 
 def _render_result(result: dict, rank: int) -> Panel:

@@ -87,12 +87,12 @@ def main(
     # Loading the sentence-transformers model
     with console.status(f"[bold]Loading model [cyan]{EMBEDDING_MODEL}[/cyan]...[/bold]"):
         model = SentenceTransformer(EMBEDDING_MODEL)
-    console.print(f"[green]Model loaded.[/green]")
+    console.print("[green]Model loaded.[/green]")
 
     # Embedding all composite documents into dense vectors
     with console.status(f"[bold]Embedding {len(documents)} documents...[/bold]"):
         embeddings = model.encode(documents, show_progress_bar=False)
-    console.print(f"[green]Embeddings computed.[/green]")
+    console.print("[green]Embeddings computed.[/green]")
 
     # Saving embeddings array to disk as .npy
     np.save(EMBEDDINGS_PATH, embeddings)

@@ -38,7 +38,7 @@ and software engineering principles.
 |---|---|---|
 | Data fetching | `requests` | Loops a-z against TheCocktailDB free API |
 | Data handling | `pandas` | Cocktail records and composite doc construction |
-| Embeddings | `sentence-transformers` | Model: `all-MiniLM-L6-v2` |
+| Embeddings | `sentence-transformers` | Model: `multi-qa-MiniLM-L6-cos-v1` |
 | Similarity search | `sklearn` (`cosine_similarity`) | Dataset is small; FAISS is not needed |
 | Index persistence | `numpy`, `joblib` | Embeddings saved as `.npy`; metadata as `.pkl` |
 | CLI | `typer` | Single-query and interactive REPL modes |
@@ -167,9 +167,11 @@ no ingredient names, yet it should semantically surface warm, spirit-forward coc
 embeddings encode semantic meaning, closing the gap between natural language intent and structured
 recipe data.
 
-**Why `all-MiniLM-L6-v2`**
-Approximately 80MB, runs fast on CPU, and produces high-quality semantic embeddings for
-short-to-medium texts. Well-suited for a local portfolio project with no GPU requirement.
+**Why `multi-qa-MiniLM-L6-cos-v1`**
+Trained specifically for asymmetric semantic search — short natural-language queries against
+longer documents — which matches this project's use case exactly. Same size and speed as
+`all-MiniLM-L6-v2` (~80MB, CPU-friendly), but produces meaningfully better rankings when
+the query and document differ in length and structure.
 
 **Why composite document strings**
 Transformers perform better on natural sentence structures than raw concatenated field values.
