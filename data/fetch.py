@@ -1,5 +1,10 @@
 import json
 import string
+import sys
+from pathlib import Path
+
+# Adding the project root to sys.path so config.py is importable when running this script directly
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 import pandas as pd
 import requests
