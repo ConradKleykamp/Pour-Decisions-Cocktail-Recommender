@@ -35,12 +35,24 @@ def _load_index() -> None:
     _metadata = joblib.load(METADATA_PATH)
 
 
+def _expand_query(query: str) -> str:
+    # Converting comma-separated ingredient lists into sentence form for better embedding alignment
+    parts = [p.strip() for p in query.split(",")]
+    if len(parts) >= 2 and all(len(p.split()) <= 3 for p in parts):
+        joined = ", ".join(parts[:-1]) + " and " + parts[-1]
+        return f"A cocktail made with {joined}."
+    return query
+
+
 def search(query: str, top_k: int) -> list[dict]:
     # Ensuring the index is loaded before running a query
     _load_index()
 
+    # Expanding the query to better align with composite document format
+    expanded = _expand_query(query)
+
     # Embedding the query string using the same model as the index
-    query_vector = _model.encode([query])
+    query_vector = _model.encode([expanded])
 
     # Computing cosine similarity between the query and all cocktail embeddings
     scores = cosine_similarity(query_vector, _embeddings)[0]

@@ -20,3 +20,6 @@ API_BASE_URL = "https://www.thecocktaildb.com/api/json/v1/1"
 
 # Defining the default number of results returned per query
 DEFAULT_TOP_K = 5
+
+# Limiting instructions appended to composite documents to keep embeddings focused
+INSTRUCTIONS_MAX_CHARS = 200

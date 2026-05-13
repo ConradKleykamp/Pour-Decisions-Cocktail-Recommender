@@ -15,6 +15,7 @@ from config import (
     EMBEDDING_MODEL,
     EMBEDDINGS_INDEX_DIR,
     EMBEDDINGS_PATH,
+    INSTRUCTIONS_MAX_CHARS,
     METADATA_PATH,
     RAW_COCKTAILS_PATH,
 )
@@ -29,9 +30,15 @@ def _build_document(cocktail: dict) -> str:
     category = cocktail.get("category") or "cocktail"
     glass = cocktail.get("glass") or "a glass"
     ingredients = ", ".join(cocktail.get("ingredients") or [])
+    instructions = cocktail.get("instructions") or ""
+
     doc = f"{name}. A {category} served in a {glass}."
     if ingredients:
         doc += f" Made with {ingredients}."
+    if instructions:
+        # Appending truncated instructions to capture flavor and style language
+        truncated = instructions[:INSTRUCTIONS_MAX_CHARS].rsplit(" ", 1)[0]
+        doc += f" {truncated}"
     return doc
 
 
